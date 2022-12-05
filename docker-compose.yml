@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  go-api:
+    build:
+      dockerfile: build/Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DB_CONNECTION: "postgresql://user:password@postgres:5432/postgres?sslmode=disable"
+  postgres:
+    image: 'postgres:14.0'
+    ports:
+      - "5432:5432"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/database/some_name/
+    volumes:
+      - /Volumes/postgres/database:/var/lib/postgresql/database/
+
